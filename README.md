@@ -1,6 +1,6 @@
 # 📊 Modern Admin Dashboard Template
 
-A professional, modern admin dashboard template built with React, TypeScript, Vite, and Shadcn/UI components. Features a clean design with custom file-based routing system for scalable application development.
+A simple admin dashboard template built with React, TypeScript, Vite, and Shadcn/UI components. Features a clean design with custom file-based routing system for scalable application development.
 
 ![Dashboard Preview](./public/Capture.PNG)
 
@@ -31,7 +31,7 @@ Make sure you have Node.js installed on your machine.
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/DuyBigPP/SHADCN_BASE.git
    cd shadcn_base
    ```
 
@@ -69,18 +69,5 @@ src/
 ## Key Features
 
 ### Custom File-based Routing
-The application uses a custom file-based routing system that automatically generates routes based on your file structure in the `pages/` directory.
+The application uses a custom file-based routing system that automatically generates routes based on your file structure in the `pages/` directory. No Nextjs for faster dev experience.
 
-### Advanced Data Tables
-Built-in DataTable component with:
-- Sorting and filtering
-- Pagination
-- Column visibility toggle
-- Row selection
-- Responsive design
-
-### Professional Admin Layout
-- Fixed header navigation
-- Collapsible sidebar
-- Breadcrumb navigation
-- User management interface
