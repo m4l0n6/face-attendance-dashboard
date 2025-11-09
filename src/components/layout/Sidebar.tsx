@@ -3,7 +3,6 @@ import { useLocation, Link } from "react-router-dom"
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
@@ -12,12 +11,11 @@ import {
 } from "@/components/ui/sidebar"
 import { menuItems } from "@/config/menu"
 import { LucideLayoutDashboard, ChevronRight } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useState } from "react"
 
 export function AdminSidebar() {
   const location = useLocation()
-  // State to control which menu with children is open 
-  const [openSubmenu, setOpenSubmenu] = React.useState<string | null>(null)
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null)
 
   const toggleSubmenu = (path: string) => {
     setOpenSubmenu((prev) => (prev === path ? null : path))
@@ -28,15 +26,15 @@ export function AdminSidebar() {
       side="left"
       variant="sidebar"
       collapsible="offcanvas"
-      className="border-r border-border"
+      className="border-border border-r"
     >
       <SidebarHeader className="p-4">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <LucideLayoutDashboard className="h-4 w-4" />
+          <div className="flex justify-center items-center bg-primary rounded-md w-8 h-8 text-primary-foreground">
+            <LucideLayoutDashboard className="w-4 h-4" />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-semibold">Admin Dashboard</span>
+            <span className="font-semibold text-sm">Admin Dashboard</span>
           </div>
         </div>
       </SidebarHeader>
@@ -53,7 +51,7 @@ export function AdminSidebar() {
                       // Check if pathname starts with this item's path (to include children)
                       isActive={location.pathname.startsWith(item.path)}
                       tooltip={item.label}
-                      className="flex justify-between items-center transition-colors hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-accent/50 data-[active=true]:font-medium"
+                      className="flex justify-between items-center data-[active=true]:bg-accent/50 hover:bg-accent data-[active=true]:font-medium transition-colors hover:text-accent-foreground"
                     >
                       <div className="flex items-center gap-2">
                         {item.icon}
@@ -72,7 +70,7 @@ export function AdminSidebar() {
                               asChild
                               isActive={location.pathname === child.path}
                               tooltip={child.label}
-                              className="transition-colors hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-accent/50 data-[active=true]:font-medium text-sm"
+                              className="data-[active=true]:bg-accent/50 hover:bg-accent data-[active=true]:font-medium text-sm transition-colors hover:text-accent-foreground"
                             >
                               <Link to={child.path}>
                                 {child.icon}
@@ -93,7 +91,7 @@ export function AdminSidebar() {
                   asChild
                   isActive={location.pathname === item.path}
                   tooltip={item.label}
-                  className="transition-colors hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-accent/50 data-[active=true]:font-medium"
+                  className="data-[active=true]:bg-accent/50 hover:bg-accent data-[active=true]:font-medium transition-colors hover:text-accent-foreground"
                 >
                   <Link to={item.path}>
                     {item.icon}
@@ -105,18 +103,6 @@ export function AdminSidebar() {
           })}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="mt-auto border-t border-border p-4">
-        <div className="flex items-center gap-2">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
-            <AvatarFallback>U</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col">
-            <span className="text-sm font-medium">Admin User</span>
-            <span className="text-xs text-muted-foreground">admin@example.com</span>
-          </div>
-        </div>
-      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   )

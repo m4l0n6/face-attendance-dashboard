@@ -5,7 +5,7 @@ export type MenuItem = {
   label: string
   path: string
   icon: React.ReactNode
-  // Optional children for submenus
+
   children?: MenuItem[]
 }
 
