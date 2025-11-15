@@ -9,9 +9,11 @@ interface AuthState {
     token: string | null;
     user: User | null;
     isLoading: boolean;
-    login: (email: string, password: string) => Promise<void>;
+    expectedRole: 'student' | 'lecturer';
+    login: (email: string, password: string) => Promise<boolean>;
     logout: () => void;
     validateStoredToken: () => Promise<void>;
+    isRoleValid: () => boolean;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -21,10 +23,21 @@ export const useAuthStore = create<AuthState>()(
             token: null,
             user: null,
             isLoading: false,
-            login: async (email: string, password: string) => {
+            expectedRole: 'lecturer',
+            login: async (email: string, password: string): Promise<boolean> => {
                 set({ isLoading: true });
                 try {
                     const response = await login(email, password);
+                    const isValidRole = response.user.role === get().expectedRole;
+                    
+                    if (!isValidRole) {
+                        set({ isLoading: false });
+                        toast.error(
+                          `Web này chỉ dành cho ${get().expectedRole}`
+                        );
+                        return false;
+                    }
+                    
                     set({
                         isAuthenticated: true,
                         token: response.token,
@@ -32,9 +45,13 @@ export const useAuthStore = create<AuthState>()(
                         isLoading: false,
                     });
                     localStorage.setItem('auth_token', response.token);
+                    toast.success('Login successful!');
+                    return true;
                 } catch (error) {
                     set({ isLoading: false });
-                    throw error;
+                    const errorMessage = error instanceof Error ? error.message : 'Login failed';
+                    toast.error(errorMessage);
+                    return false;
                 }
             },
             logout: () => {
@@ -44,6 +61,11 @@ export const useAuthStore = create<AuthState>()(
                     token: null, 
                     user: null 
                 });
+                toast.success('Logged out successfully!');
+            },
+            isRoleValid: () => {
+                const { user, expectedRole } = get();
+                return user?.role === expectedRole;
             },
             validateStoredToken: async () => {
                 const token = get().token || localStorage.getItem('auth_token');
@@ -55,13 +77,24 @@ export const useAuthStore = create<AuthState>()(
                 set({ isLoading: true });
                 try {
                     const user = await getMe(token);
+                    const isValidRole = user.role === get().expectedRole;
+                    
+                    if (!isValidRole) {
+                        localStorage.removeItem('auth_token');
+                        set({ isAuthenticated: false, token: null, user: null, isLoading: false });
+                        toast.error(
+                          `Lỗi role, web này chỉ dành cho ${get().expectedRole}`
+                        );
+                        return;
+                    }
+                    
                     set({
                         isAuthenticated: true,
                         token,
                         user,
                         isLoading: false,
                     });
-                } catch (error) {
+                } catch {
                     toast.error('Lỗi xác thực. Vui lòng đăng nhập lại.');
                     localStorage.removeItem('auth_token');
                     set({ 

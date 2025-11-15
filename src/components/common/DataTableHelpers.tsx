@@ -68,10 +68,10 @@ export const createSortableColumn = <T,>(
   header: ({ column }) => (
     <div
       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      className="flex items-center cursor-pointer hover:text-foreground transition-colors"
+      className="flex items-center hover:text-foreground transition-colors cursor-pointer"
     >
       {header}
-      <ArrowUpDown className="ml-2 h-4 w-4" />
+      <ArrowUpDown className="ml-2 w-4 h-4" />
     </div>
   ),
   cell: options?.cell ? ({ getValue }) => (
@@ -115,16 +115,16 @@ export const createActionsColumn = <T,>(
   }
 ): ColumnDef<T> => ({
   id: "actions",
-  header: options?.header || "Actions",
+  header: options?.header || "Thao tác",
   cell: ({ row }) => {
     const item = row.original
 
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button variant="ghost" className="p-0 w-8 h-8">
             <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
+            <MoreHorizontal className="w-4 h-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -132,13 +132,13 @@ export const createActionsColumn = <T,>(
           <DropdownMenuSeparator />
           {actions.onView && (
             <DropdownMenuItem onClick={() => actions.onView?.(item)}>
-              <Eye className="mr-2 h-4 w-4" />
+              <Eye className="mr-2 w-4 h-4" />
               View
             </DropdownMenuItem>
           )}
           {actions.onEdit && (
             <DropdownMenuItem onClick={() => actions.onEdit?.(item)}>
-              <Edit className="mr-2 h-4 w-4" />
+              <Edit className="mr-2 w-4 h-4" />
               Edit
             </DropdownMenuItem>
           )}
@@ -147,7 +147,7 @@ export const createActionsColumn = <T,>(
               onClick={() => actions.onDelete?.(item)}
               className="text-destructive focus:text-destructive"
             >
-              <Trash2 className="mr-2 h-4 w-4" />
+              <Trash2 className="mr-2 w-4 h-4" />
               Delete
             </DropdownMenuItem>
           )}
@@ -200,10 +200,10 @@ export const createDateColumn = <T,>(
   header: ({ column }) => (
     <div
       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      className="flex items-center cursor-pointer hover:text-foreground transition-colors"
+      className="flex items-center hover:text-foreground transition-colors cursor-pointer"
     >
       {header}
-      <ArrowUpDown className="ml-2 h-4 w-4" />
+      <ArrowUpDown className="ml-2 w-4 h-4" />
     </div>
   ),
   cell: ({ getValue }) => {

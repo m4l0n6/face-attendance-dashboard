@@ -42,9 +42,10 @@ export function LoginForm({
     }
 
     try {
-      await loginUser(email, password);
-      toast.success("Đăng nhập thành công");
-      navigate("/dashboard");
+      const success = await loginUser(email, password);
+      if (success) {
+        navigate("/dashboard");
+      }
     } catch {
       toast.error("Có lỗi xảy ra trong quá trình đăng nhập");
     } finally {
