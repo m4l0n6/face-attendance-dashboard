@@ -12,5 +12,5 @@ export type MenuItem = {
 export const menuItems: MenuItem[] = [
   { label: "Trang chủ", path: "/dashboard", icon: <Home size={16} /> },
   { label: "Lớp học", path: "/classes", icon: <User2 size={16} /> },
-  { label: "Sinh viên", path: "/student", icon: <User size={16} /> },
+  { label: "Sinh viên", path: "/students", icon: <User size={16} /> },
 ];

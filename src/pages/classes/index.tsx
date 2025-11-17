@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { DataTable } from "@/components/common/DataTable";
 import {
   createSortableColumn,
@@ -7,129 +8,114 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import { useClassStore } from "@/stores/classes";
 import type { Classes } from "@/services/classes/typing";
-
-const sampleClasses: Classes[] = [
-  {
-    id: "class-1",
-    name: "Lập trình Web",
-    code: "IT4409",
-    description: "Môn học về phát triển ứng dụng web với HTML, CSS, JavaScript",
-    lecturerId: "lecturer-1",
-    _count: {
-      students: 45,
-      sessions: 12
-    },
-    createdAt: "2024-01-15T10:30:00.000Z"
-  },
-  {
-    id: "class-2",
-    name: "Cơ sở dữ liệu",
-    code: "IT3090",
-    description: "Thiết kế và quản lý cơ sở dữ liệu quan hệ",
-    lecturerId: "lecturer-2",
-    _count: {
-      students: 38,
-      sessions: 15
-    },
-    createdAt: "2024-02-20T09:15:00.000Z"
-  },
-  {
-    id: "class-3",
-    name: "Mạng máy tính",
-    code: "IT4062",
-    description: "Các giao thức mạng và kiến trúc mạng máy tính",
-    lecturerId: "lecturer-1",
-    _count: {
-      students: 42,
-      sessions: 10
-    },
-    createdAt: "2024-03-10T14:20:00.000Z"
-  },
-  {
-    id: "class-4",
-    name: "Trí tuệ nhân tạo",
-    code: "IT4853",
-    description: "Các thuật toán và ứng dụng của trí tuệ nhân tạo",
-    lecturerId: "lecturer-3",
-    _count: {
-      students: 35,
-      sessions: 8
-    },
-    createdAt: "2024-08-28T11:45:00.000Z"
-  },
-  {
-    id: "class-5",
-    name: "Phát triển ứng dụng di động",
-    code: "IT4788",
-    description: "Lập trình ứng dụng mobile cho Android và iOS",
-    lecturerId: "lecturer-2",
-    _count: {
-      students: 28,
-      sessions: 6
-    },
-    createdAt: "2024-06-12T16:30:00.000Z"
-  },
-];
+import { ClassFormDialog } from "@/components/classes/ClassFormDialog";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const ClassesPage = () => {
-  const classData = useClassStore((state) => state.classes);
-  console.log("Classes Data:", classData);
+  const { classes, fetchClasses, addClass, editClass, removeClass, isLoading } = useClassStore();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editData, setEditData] = useState<Classes | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchClasses();
+  }, []); // Empty dependency array
+
+  const handleCreate = () => {
+    setEditData(null);
+    setDialogOpen(true);
+  };
+
+  const handleEdit = (classItem: Classes) => {
+    setEditData(classItem);
+    setDialogOpen(true);
+  };
+
+  const handleDeleteClick = (classItem: Classes) => {
+    setDeleteId(classItem.id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (deleteId) {
+      await removeClass(deleteId);
+      setDeleteDialogOpen(false);
+      setDeleteId(null);
+    }
+  };
+
+  const handleSubmit = async (data: Partial<Classes>) => {
+    if (editData) {
+      await editClass(editData.id, data);
+    } else {
+      await addClass(data);
+    }
+    setDialogOpen(false);
+  };
+
   const columns: ColumnDef<Classes>[] = [
-    createSortableColumn("name", "Tên lớp", {
-      size: 200,
-      className: "font-medium",
-    }),
-    createSortableColumn("code", "Mã lớp", {
-      size: 120,
-      className: "font-mono text-sm",
-    }),
-    createSortableColumn("description", "Mô tả", {
-      size: 300,
-      className: "text-muted-foreground text-sm",
-    }),
+    createSortableColumn("name", "Tên lớp"),
+    createSortableColumn("code", "Mã lớp"),
     {
-      accessorKey: "_count.students",
-      header: "Số sinh viên",
-      size: 120,
-      cell: ({ row }) => (
-        <div className="font-medium text-center">
-          {row.original._count.students}
-        </div>
-      ),
+      accessorKey: "description",
+      header: "Mô tả",
     },
-    {
-      accessorKey: "_count.sessions",
-      header: "Số buổi học",
-      size: 120,
-      cell: ({ row }) => (
-        <div className="font-medium text-center">
-          {row.original._count.sessions}
-        </div>
-      ),
-    },
-    createDateColumn("createdAt", "Ngày tạo", { size: 120 }),
-    createActionsColumn<Classes>(
-      {
-        onView: (classItem) => console.log("View class:", classItem),
-        onEdit: (classItem) => console.log("Edit class:", classItem),
-        onDelete: (classItem) => console.log("Delete class:", classItem),
-      },
-      { size: 80 }
-    ),
+    createDateColumn("createdAt", "Ngày tạo"),
+    createActionsColumn({
+      onEdit: handleEdit,
+      onDelete: handleDeleteClick,
+    }),
   ];
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="font-bold text-3xl tracking-tight">Tổng quan Lớp học</h2>
-        <p className="text-muted-foreground">Danh sách lớp học</p>
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Quản lý lớp học</h1>
+        <Button onClick={handleCreate}>Thêm lớp học</Button>
       </div>
+
       <DataTable
         columns={columns}
-        data={sampleClasses}
+        data={classes}
+        isLoading={isLoading}
         searchKey="name"
-        searchPlaceholder="Tìm kiếm lớp học..."
-        onRowClick={(row) => console.log("Row clicked:", row.original)}
+        searchPlaceholder="Tìm kiếm theo tên lớp..."
       />
+
+      <ClassFormDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        onSubmit={handleSubmit}
+        initialData={editData}
+      />
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
+            <AlertDialogDescription>
+              Bạn có chắc chắn muốn xóa lớp học này? Hành động này không thể hoàn tác.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm}>
+              Xóa
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
