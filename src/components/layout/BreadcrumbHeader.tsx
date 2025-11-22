@@ -1,5 +1,6 @@
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import AvatarDropMenu from "./AvatarDropMenu" 
+import AvatarDropMenu from "./AvatarDropMenu"
+import NotificationList from "./NotificationList"
 
 export function BreadcrumbHeader() {
 
@@ -11,6 +12,7 @@ export function BreadcrumbHeader() {
       </div>
 
       <div className="flex items-center gap-4 ml-auto">
+        <NotificationList />
         <AvatarDropMenu />
       </div>
     </header>

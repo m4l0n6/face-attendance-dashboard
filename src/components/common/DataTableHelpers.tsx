@@ -1,16 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
+import { ButtonGroup } from "@/components/ui/button-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ArrowUpDown, MoreHorizontal, Eye, Edit, Trash2 } from "lucide-react"
+import { ArrowUpDown, Eye, Edit, Trash2 } from "lucide-react"
 
 // Types for common column configurations
 export interface SelectableColumn {
@@ -41,6 +34,7 @@ export const createSelectionColumn = <T,>(): ColumnDef<T> => ({
       }
       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
       aria-label="Select all"
+      className="mr-0"
     />
   ),
   cell: ({ row }) => (
@@ -48,11 +42,12 @@ export const createSelectionColumn = <T,>(): ColumnDef<T> => ({
       checked={row.getIsSelected()}
       onCheckedChange={(value) => row.toggleSelected(!!value)}
       aria-label="Select row"
+      className="mr-0"
     />
   ),
   enableSorting: false,
   enableHiding: false,
-})
+});
 
 // Sortable column with header and built-in styling
 export const createSortableColumn = <T,>(
@@ -120,40 +115,43 @@ export const createActionsColumn = <T,>(
     const item = row.original
 
     return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="p-0 w-8 h-8">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="w-4 h-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          {actions.onView && (
-            <DropdownMenuItem onClick={() => actions.onView?.(item)}>
-              <Eye className="mr-2 w-4 h-4" />
-              View
-            </DropdownMenuItem>
-          )}
-          {actions.onEdit && (
-            <DropdownMenuItem onClick={() => actions.onEdit?.(item)}>
-              <Edit className="mr-2 w-4 h-4" />
-              Edit
-            </DropdownMenuItem>
-          )}
-          {actions.onDelete && (
-            <DropdownMenuItem 
+      <ButtonGroup>
+        {actions.onView && (
+          <ButtonGroup>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => actions.onView?.(item)}
+            >
+              <Eye className="w-4 h-4" />
+            </Button>
+          </ButtonGroup>
+        )}
+        {actions.onEdit && (
+          <ButtonGroup>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => actions.onEdit?.(item)}
+            >
+              <Edit className="w-4 h-4" />
+            </Button>
+          </ButtonGroup>
+        )}
+        {actions.onDelete && (
+          <ButtonGroup>
+            <Button
+              variant="ghost"
+              size='icon'
               onClick={() => actions.onDelete?.(item)}
               className="text-destructive focus:text-destructive"
             >
-              <Trash2 className="mr-2 w-4 h-4" />
-              Delete
-            </DropdownMenuItem>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    )
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          </ButtonGroup>
+        )}
+      </ButtonGroup>
+    );
   },
   enableSorting: false,
   enableHiding: false,
