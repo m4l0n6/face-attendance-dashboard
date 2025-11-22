@@ -14,7 +14,7 @@ const RingSpinner = ({ size = 64 }: { size?: number }) => (
           attributeName="r"
           begin="0s"
           calcMode="spline"
-          dur="1.8s"
+          dur="1s"
           keySplines="0.165, 0.84, 0.44, 1"
           keyTimes="0; 1"
           repeatCount="indefinite"

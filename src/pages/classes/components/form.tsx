@@ -14,14 +14,14 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import type { Classes } from "@/services/classes/typing";
 
-interface ClassFormDialogProps {
+interface ClassFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   initialData?: Classes | null;
   onSubmit: (data: { name: string; code: string; description: string }) => Promise<void>;
 }
 
-export function ClassFormDialog({ open, onOpenChange, initialData, onSubmit }: ClassFormDialogProps) {
+export function ClassForm({ open, onOpenChange, initialData, onSubmit }: ClassFormProps) {
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [description, setDescription] = useState("");

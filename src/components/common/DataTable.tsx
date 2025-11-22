@@ -40,6 +40,9 @@ interface DataTableProps<TData, TValue> {
   showColumnToggle?: boolean
   showPagination?: boolean
   pageSize?: number
+  isLoading?: boolean
+  onCreateClick?: () => void
+  showCreateButton?: boolean
 }
 
 export function DataTable<TData, TValue>({
@@ -51,6 +54,8 @@ export function DataTable<TData, TValue>({
   showColumnToggle = true,
   showPagination = true,
   pageSize = 10,
+  onCreateClick,
+  showCreateButton = true,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -99,7 +104,11 @@ export function DataTable<TData, TValue>({
               />
             </div>
           )}
-          <Button>Thêm mới</Button>
+          {showCreateButton && onCreateClick && (
+            <Button onClick={onCreateClick}>
+              Thêm mới
+            </Button>
+          )}
         </div>
         
         {showColumnToggle && (
@@ -272,6 +281,8 @@ export function DataTable<TData, TValue>({
           </div>
         </div>
       )}
+
+
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/common/DataTable";
 import {
+  createSelectionColumn,
   createSortableColumn,
   createActionsColumn,
   createDateColumn,
@@ -8,8 +9,7 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import { useClassStore } from "@/stores/classes";
 import type { Classes } from "@/services/classes/typing";
-import { ClassFormDialog } from "@/components/classes/ClassFormDialog";
-import { Button } from "@/components/ui/button";
+import { ClassForm } from "./components/form";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,7 +30,7 @@ const ClassesPage = () => {
 
   useEffect(() => {
     fetchClasses();
-  }, []); // Empty dependency array
+  }, []);
 
   const handleCreate = () => {
     setEditData(null);
@@ -55,7 +55,7 @@ const ClassesPage = () => {
     }
   };
 
-  const handleSubmit = async (data: Partial<Classes>) => {
+  const handleSubmit = async (data: { name: string; code: string; description: string }) => {
     if (editData) {
       await editClass(editData.id, data);
     } else {
@@ -65,8 +65,9 @@ const ClassesPage = () => {
   };
 
   const columns: ColumnDef<Classes>[] = [
-    createSortableColumn("name", "Tên lớp"),
+    createSelectionColumn<Classes>(),
     createSortableColumn("code", "Mã lớp"),
+    createSortableColumn("name", "Tên lớp"),
     {
       accessorKey: "description",
       header: "Mô tả",
@@ -81,8 +82,7 @@ const ClassesPage = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Quản lý lớp học</h1>
-        <Button onClick={handleCreate}>Thêm lớp học</Button>
+        <h1 className="font-bold text-3xl">Quản lý lớp học</h1>
       </div>
 
       <DataTable
@@ -91,9 +91,10 @@ const ClassesPage = () => {
         isLoading={isLoading}
         searchKey="name"
         searchPlaceholder="Tìm kiếm theo tên lớp..."
+        onCreateClick={handleCreate}
       />
 
-      <ClassFormDialog
+      <ClassForm
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         onSubmit={handleSubmit}

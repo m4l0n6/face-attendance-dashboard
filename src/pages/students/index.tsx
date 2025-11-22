@@ -95,9 +95,9 @@ const StudentsPage = () => {
 
   if (isLoading && students.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[calc(100vh-200px)]">
+      <div className="flex justify-center items-center h-[calc(100vh-200px)]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+          <div className="mx-auto border-gray-900 border-b-2 rounded-full w-12 h-12 animate-spin"></div>
           <p className="mt-4 text-gray-600">Đang tải dữ liệu...</p>
         </div>
       </div>
@@ -107,7 +107,7 @@ const StudentsPage = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Quản lý sinh viên</h1>
+        <h1 className="font-bold text-3xl">Quản lý sinh viên</h1>
         <div className="flex gap-2">
           <Select
             value={selectedClassId || "all"}
@@ -128,11 +128,11 @@ const StudentsPage = () => {
             </SelectContent>
           </Select>
           <Button variant="outline" onClick={handleExportCSV}>
-            <Download className="mr-2 h-4 w-4" />
+            <Download className="mr-2 w-4 h-4" />
             Xuất CSV
           </Button>
           <Button variant="outline" onClick={() => setImportDialogOpen(true)}>
-            <Upload className="mr-2 h-4 w-4" />
+            <Upload className="mr-2 w-4 h-4" />
             Import CSV
           </Button>
         </div>
