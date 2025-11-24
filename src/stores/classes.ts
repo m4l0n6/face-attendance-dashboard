@@ -3,25 +3,10 @@ import { persist } from "zustand/middleware";
 import { getAllClasses, createClass, updateClass, deleteClass } from "../services/api";
 import { useAuthStore } from "./auth";
 import { toast } from "sonner";
-
-
-interface Class {
-    id: string;
-    name: string;
-    code: string;
-    description: string;
-    lecturerId: string;
-    _count: ClassCount;
-    createdAt: string;
-}
-
-type ClassCount = {
-    students: number;
-    sessions: number;
-}
+import type { Classes } from "@/services/classes/typing";
 
 interface ClassState {
-    classes: Class[];
+    classes: Classes[];
     isLoading: boolean;
     error: string | null;
     fetchClasses: () => Promise<void>;

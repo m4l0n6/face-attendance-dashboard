@@ -10,9 +10,7 @@ export default function NotFoundPage() {
     <div className="flex justify-center items-center bg-background p-4 min-h-screen">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 font-bold text-muted-foreground text-6xl">
-            404
-          </div>
+          <img src="/not-found.avif" alt="" />
           <CardTitle className="text-2xl">Trang không tồn tại</CardTitle>
           <CardDescription>
             Trang bạn tìm kiếm không tồn tại hoặc đã bị di chuyển.

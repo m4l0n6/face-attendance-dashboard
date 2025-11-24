@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { ButtonGroup } from "@/components/ui/button-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
-import { ArrowUpDown, Eye, Edit, Trash2 } from "lucide-react"
+import { ArrowUpDown, Edit, Trash2, ExternalLink } from "lucide-react"
 
 // Types for common column configurations
 export interface SelectableColumn {
@@ -47,6 +47,7 @@ export const createSelectionColumn = <T,>(): ColumnDef<T> => ({
   ),
   enableSorting: false,
   enableHiding: false,
+  size: 50,
 });
 
 // Sortable column with header and built-in styling
@@ -123,7 +124,7 @@ export const createActionsColumn = <T,>(
               size="icon"
               onClick={() => actions.onView?.(item)}
             >
-              <Eye className="w-4 h-4" />
+              <ExternalLink className="w-4 h-4" />
             </Button>
           </ButtonGroup>
         )}
@@ -215,4 +216,24 @@ export const createDateColumn = <T,>(
     )
   },
   size: options?.size || 120,
+})
+
+// Index column (STT - Số thứ tự)
+export const createIndexColumn = <T,>(
+  options?: {
+    size?: number
+    header?: string
+    className?: string
+  }
+): ColumnDef<T> => ({
+  id: "stt",
+  header: options?.header || "STT",
+  cell: ({ row }) => (
+    <div className={`text-center ${options?.className || ''}`}>
+      {row.index + 1}
+    </div>
+  ),
+  enableSorting: false,
+  enableHiding: false,
+  size: options?.size || 60,
 })

@@ -25,7 +25,7 @@ const AvatarDropMenu = () => {
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="border-none h-full">
             <Avatar>
-              <AvatarImage src="avatar.png" alt="@shadcn" />
+              <AvatarImage src="/avatar.png" alt={user?.displayName || "User avatar"} />
             </Avatar>
             <p className="hidden md:block">{user?.displayName}</p>
           </Button>

@@ -67,3 +67,43 @@ export async function importStudents(token: string, classId: string, students: A
     })
     .then((response) => response.data);
 }
+
+export async function createSchedule(token: string, data: {
+  classId: string;
+  name: string;
+  startDate: string;
+  endDate: string;
+  daysOfWeek: number[];
+  startTime: string;
+  endTime: string;
+  room: string;
+  description: string;
+}) {
+  return axios
+    .post(`${APP_CONFIG_API_URL}/schedules/create`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((response) => response.data);
+}
+
+export async function getSchedulesByClass(token: string, classId: string) {
+  return axios
+    .get(`${APP_CONFIG_API_URL}/schedules/class/${classId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((response) => response.data);
+}
+
+export async function deleteSchedule(token: string, scheduleId: string) {
+  return axios
+    .delete(`${APP_CONFIG_API_URL}/schedules/${scheduleId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((response) => response.data);
+}

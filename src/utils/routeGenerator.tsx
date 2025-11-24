@@ -12,7 +12,22 @@ export const generateRoutes = (items: MenuItem[]): React.ReactElement[] => {
   items.forEach((item) => {
     // Skip items that are just parents with children
     if (!item.children || item.children.length === 0) {
-      const modulePath = `../pages${item.path}/index.tsx`
+      // Convert dynamic path like /classes/:classId to /classes/classes-detail
+      let modulePath = item.path
+      
+      // Handle dynamic routes with parameters
+      if (modulePath.includes(':')) {
+        // Extract base path and convert :classId -> classes-detail
+        modulePath = modulePath.replace(/\/:([^/]+)/g, () => {
+          // Get the parent segment (e.g., 'classes' from '/classes/:classId')
+          const segments = modulePath.split('/')
+          const parentSegment = segments[segments.length - 2]
+          return `/${parentSegment}-detail`
+        })
+      }
+      
+      modulePath = `../pages${modulePath}/index.tsx`
+      
       const moduleLoader = modules[modulePath]
       
       if (moduleLoader) {
@@ -30,7 +45,7 @@ export const generateRoutes = (items: MenuItem[]): React.ReactElement[] => {
           />
         )
       } else {
-        console.warn(`No component found for path: ${item.path}`)
+        console.warn(`No component found for path: ${item.path}, tried: ${modulePath}`)
       }
     } else {
       // Handle parent with children - redirect to first child

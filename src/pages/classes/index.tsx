@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { DataTable } from "@/components/common/DataTable";
 import {
   createSelectionColumn,
   createSortableColumn,
   createActionsColumn,
   createDateColumn,
+  createIndexColumn,
 } from "@/components/common/DataTableHelpers";
 import { ColumnDef } from "@tanstack/react-table";
 import { useClassStore } from "@/stores/classes";
@@ -22,7 +24,8 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const ClassesPage = () => {
-  const { classes, fetchClasses, addClass, editClass, removeClass, isLoading } = useClassStore();
+  const navigate = useNavigate();
+  const { classes, fetchClasses, addClass, editClass, removeClass, isLoading, error } = useClassStore();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editData, setEditData] = useState<Classes | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -66,6 +69,7 @@ const ClassesPage = () => {
 
   const columns: ColumnDef<Classes>[] = [
     createSelectionColumn<Classes>(),
+    createIndexColumn(),
     createSortableColumn("code", "Mã lớp"),
     createSortableColumn("name", "Tên lớp"),
     {
@@ -74,10 +78,35 @@ const ClassesPage = () => {
     },
     createDateColumn("createdAt", "Ngày tạo"),
     createActionsColumn({
+      onView: (classItem) => {
+        navigate(`/classes/${classItem.id}`);
+      },
       onEdit: handleEdit,
       onDelete: handleDeleteClick,
     }),
   ];
+
+  if (isLoading && classes.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-muted-foreground">Đang tải dữ liệu...</div>
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div className="flex flex-col justify-center items-center gap-4 h-64">
+        <div className="text-destructive">Lỗi: {error}</div>
+        <button
+          onClick={() => fetchClasses()}
+          className="bg-primary hover:bg-primary/90 px-4 py-2 rounded-md text-primary-foreground"
+        >
+          Thử lại
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">

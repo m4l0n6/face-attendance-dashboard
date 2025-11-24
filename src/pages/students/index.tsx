@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/common/DataTable";
 import {
+  createIndexColumn,
   createSortableColumn,
 } from "@/components/common/DataTableHelpers";
 import { ColumnDef } from "@tanstack/react-table";
@@ -84,6 +85,7 @@ const StudentsPage = () => {
   };
 
   const columns: ColumnDef<Student>[] = [
+    createIndexColumn(),
     createSortableColumn("studentId", "Mã sinh viên"),
     createSortableColumn("name", "Tên sinh viên"),
     createSortableColumn("email", "Email"),
