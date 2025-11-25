@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useClassStore } from "@/stores/classes";
 import { useScheduleStore } from "@/stores/schedules";

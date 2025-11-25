@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { getSchedulesByClass, createSchedule, deleteSchedule } from "../services/api";
+import { getSchedulesByClass, createSchedule, deleteSchedule } from "@/services/schedules/index";
 import { useAuthStore } from "./auth";
 import { toast } from "sonner";
 import type { Schedule, CreateScheduleRequest } from "@/services/schedules/typing";

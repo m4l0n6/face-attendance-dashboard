@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { getAllClasses, createClass, updateClass, deleteClass } from "../services/api";
+import { getAllClasses, createClass, updateClass, deleteClass } from "@/services/classes/index";
 import { useAuthStore } from "./auth";
 import { toast } from "sonner";
 import type { Classes } from "@/services/classes/typing";

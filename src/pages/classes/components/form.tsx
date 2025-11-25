@@ -58,13 +58,28 @@ export function ClassForm({ open, onOpenChange, initialData, onSubmit }: ClassFo
       <DialogContent className="sm:max-w-[500px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>{initialData ? "Chỉnh sửa lớp học" : "Tạo lớp học mới"}</DialogTitle>
+            <DialogTitle>
+              {initialData ? "Chỉnh sửa lớp học" : "Tạo lớp học mới"}
+            </DialogTitle>
             <DialogDescription>
-              {initialData ? "Cập nhật thông tin lớp học" : "Nhập thông tin lớp học mới"}
+              {initialData
+                ? "Cập nhật thông tin lớp học"
+                : "Nhập thông tin lớp học mới"}
             </DialogDescription>
           </DialogHeader>
 
-          <FieldGroup className="py-4">
+          <Field className="py-4">
+            <FieldLabel htmlFor="code">Mã lớp</FieldLabel>
+            <Input
+              id="code"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder="Nhập mã lớp..."
+              required
+            />
+          </Field>
+
+          <FieldGroup>
             <Field>
               <FieldLabel htmlFor="name">Tên lớp học</FieldLabel>
               <Input
@@ -76,18 +91,7 @@ export function ClassForm({ open, onOpenChange, initialData, onSubmit }: ClassFo
               />
             </Field>
 
-            <Field>
-              <FieldLabel htmlFor="code">Mã lớp</FieldLabel>
-              <Input
-                id="code"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                placeholder="Nhập mã lớp..."
-                required
-              />
-            </Field>
-
-            <Field>
+            <Field className="py-4">
               <FieldLabel htmlFor="description">Mô tả</FieldLabel>
               <Textarea
                 id="description"
@@ -100,7 +104,11 @@ export function ClassForm({ open, onOpenChange, initialData, onSubmit }: ClassFo
           </FieldGroup>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
               Hủy
             </Button>
             <Button type="submit" disabled={loading}>

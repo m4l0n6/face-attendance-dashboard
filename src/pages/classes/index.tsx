@@ -5,7 +5,6 @@ import {
   createSelectionColumn,
   createSortableColumn,
   createActionsColumn,
-  createDateColumn,
   createIndexColumn,
 } from "@/components/common/DataTableHelpers";
 import { ColumnDef } from "@tanstack/react-table";
@@ -76,7 +75,12 @@ const ClassesPage = () => {
       accessorKey: "description",
       header: "Mô tả",
     },
-    createDateColumn("createdAt", "Ngày tạo"),
+    {
+      accessorKey: "createdAt",
+      header: "Ngày tạo",
+      cell: ({ row }) =>
+        new Date(row.original.createdAt).toLocaleDateString("vi-VN"),
+    },
     createActionsColumn({
       onView: (classItem) => {
         navigate(`/classes/${classItem.id}`);

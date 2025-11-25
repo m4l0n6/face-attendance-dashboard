@@ -1,5 +1,5 @@
 import React from "react"
-import { Home, User2, User } from "lucide-react"
+import { Home, User2, User, Bell } from "lucide-react"
 
 export type MenuItem = {
   label: string
@@ -13,4 +13,5 @@ export const menuItems: MenuItem[] = [
   { label: "Trang chủ", path: "/dashboard", icon: <Home size={16} /> },
   { label: "Lớp học", path: "/classes", icon: <User2 size={16} /> },
   { label: "Sinh viên", path: "/students", icon: <User size={16} /> },
+  { label: "Thông báo", path: "/notifications", icon: <Bell size={16} /> },
 ];
