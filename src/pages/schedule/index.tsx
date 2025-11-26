@@ -31,7 +31,7 @@ const daysOfWeekMap: Record<number, string> = {
 const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   SCHEDULED: { label: "Đã lên lịch", variant: "secondary" },
   COMPLETED: { label: "Hoàn thành", variant: "default" },
-  CANCELLED: { label: "Đã hủy", variant: "destructive" },
+  CANCELLED: { label: "Nghỉ", variant: "destructive" },
 };
 
 const SchedulesDetailPage = () => {
