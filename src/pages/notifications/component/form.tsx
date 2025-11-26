@@ -54,14 +54,13 @@ interface NotificationFormProps {
 }
 
 const notificationTypes = [
-  { value: "GENERAL", label: "Chung" },
   { value: "SCHEDULE_CREATED", label: "Lịch học mới" },
   { value: "SCHEDULE_UPDATED", label: "Cập nhật lịch học" },
-  { value: "SESSION_STARTED", label: "Bắt đầu buổi học" },
-  { value: "SESSION_ENDED", label: "Kết thúc buổi học" },
-  { value: "ATTENDANCE_REMINDER", label: "Nhắc điểm danh" },
-  { value: "WARNING", label: "Cảnh báo" },
-  { value: "INFO", label: "Thông tin" },
+  { value: "SCHEDULE_CANCELLED", label: "Nghỉ học" },
+  { value: "SESSION_REMINDER", label: "Nhắc nhở buổi học sắp diễn ra" },
+  { value: "ATTENDANCE_MARKED", label: "Điểm danh thành công" },
+  { value: "ATTENDANCE_REMINDER", label: "Nhắc nhở điểm danh/bổ sung ảnh" },
+  { value: "GENERAL", label: "Chung" },
 ];
 
 export function NotificationForm({ open, onOpenChange, onSuccess }: NotificationFormProps) {
