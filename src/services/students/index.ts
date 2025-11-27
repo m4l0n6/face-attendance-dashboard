@@ -1,4 +1,4 @@
-import apiClient from "../apiClient";
+import axios from "axios";
 import type { Student, ImportStudentsDto } from "./typing";
 
 interface Class {
@@ -20,7 +20,7 @@ export const studentService = {
   // Get all students from all classes
   getAll: async (): Promise<Student[]> => {
     try {
-      const classesResponse = await apiClient.get("/classes");
+      const classesResponse = await axios.get("/classes");
       const classes = classesResponse.data || [];
 
       if (classes.length === 0) {
@@ -32,24 +32,29 @@ export const studentService = {
       await Promise.all(
         classes.map(async (cls: Class) => {
           try {
-            const studentsResponse = await apiClient.get(
+            const studentsResponse = await axios.get(
               `/classes/${cls._id}/students`
             );
-            const students = (studentsResponse.data || []).map((student: StudentResponse) => ({
-              id: student._id || student.id,
-              studentId: student.studentId,
-              name: student.name,
-              email: student.email,
-              classId: cls._id,
-              className: cls.name,
-              createdAt: student.createdAt,
-              updatedAt: student.updatedAt,
-            }));
-        allStudents.push(...students);
-      } catch (error) {
-        console.error(`Error fetching students for class ${cls._id}:`, error);
-      }
-    })
+            const students = (studentsResponse.data || []).map(
+              (student: StudentResponse) => ({
+                id: student._id || student.id,
+                studentId: student.studentId,
+                name: student.name,
+                email: student.email,
+                classId: cls._id,
+                className: cls.name,
+                createdAt: student.createdAt,
+                updatedAt: student.updatedAt,
+              })
+            );
+            allStudents.push(...students);
+          } catch (error) {
+            console.error(
+              `Error fetching students for class ${cls._id}:`,
+              error
+            );
+          }
+        })
       );
 
       return allStudents;
@@ -61,7 +66,7 @@ export const studentService = {
 
   // Get students by class ID
   getByClassId: async (classId: string): Promise<Student[]> => {
-    const response = await apiClient.get(`/classes/${classId}/students`);
+    const response = await axios.get(`/classes/${classId}/students`);
     return (response.data || []).map((student: StudentResponse) => ({
       id: student._id || student.id,
       studentId: student.studentId,
@@ -74,7 +79,10 @@ export const studentService = {
   },
 
   // Import students to class via CSV
-  importToClass: async (classId: string, data: ImportStudentsDto): Promise<void> => {
-    await apiClient.post(`/classes/${classId}/students/import`, data);
+  importToClass: async (
+    classId: string,
+    data: ImportStudentsDto
+  ): Promise<void> => {
+    await axios.post(`/classes/${classId}/students/import`, data);
   },
 };

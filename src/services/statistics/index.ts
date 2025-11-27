@@ -1,11 +1,14 @@
-import apiClient from "../apiClient";
-import type { AdminOverviewResponse } from "./typing";
+import axios from "axios";
+import { APP_CONFIG_API_URL } from "@/utils/constant";
 
-export async function getAdminOverview(token: string): Promise<AdminOverviewResponse> {
-  const response = await apiClient.get("/statistics/admin/overview", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
+export async function getAdminOverview(
+  token: string
+) {
+  return axios
+    .get(`${APP_CONFIG_API_URL}/statistics/admin/overview`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((response) => response.data);
 }

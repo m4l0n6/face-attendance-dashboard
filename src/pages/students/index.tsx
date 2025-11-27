@@ -6,7 +6,7 @@ import {
 } from "@/components/common/DataTableHelpers";
 import { ColumnDef } from "@tanstack/react-table";
 import { useStudentStore } from "@/stores/students";
-import type { Student } from "@/services/students/typing";
+import type { Student, ImportStudentsDto } from "@/services/students/typing";
 import { ImportStudentsDialog } from "@/components/students/ImportStudentsDialog";
 import { Button } from "@/components/ui/button";
 import { Download, Upload } from "lucide-react";
@@ -44,7 +44,7 @@ const StudentsPage = () => {
     loadData();
   }, []); // Empty dependency array - only run once on mount
 
-  const handleImport = async (classId: string, data: Student[]) => {
+  const handleImport = async (classId: string, data: ImportStudentsDto) => {
     await importStudents(classId, data);
     setImportDialogOpen(false);
   };
