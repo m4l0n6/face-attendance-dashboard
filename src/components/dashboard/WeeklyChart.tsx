@@ -46,7 +46,7 @@ export function WeeklyChart({ weeklyStats, weeklyPeriod, onPeriodChange }: Weekl
   return (
     <Card>
       <CardHeader>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex sm:flex-row flex-col sm:justify-between sm:items-center gap-4">
           <div>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="w-5 h-5" />
@@ -55,15 +55,25 @@ export function WeeklyChart({ weeklyStats, weeklyPeriod, onPeriodChange }: Weekl
             <CardDescription>
               {weeklyStats?.period && (
                 <>
-                  Từ {format(new Date(weeklyStats.period.startDate), "dd/MM/yyyy", { locale: vi })} đến{" "}
-                  {format(new Date(weeklyStats.period.endDate), "dd/MM/yyyy", { locale: vi })}
+                  Từ{" "}
+                  {format(
+                    new Date(weeklyStats.period.startDate),
+                    "dd/MM/yyyy",
+                    { locale: vi }
+                  )}{" "}
+                  đến{" "}
+                  {format(new Date(weeklyStats.period.endDate), "dd/MM/yyyy", {
+                    locale: vi,
+                  })}
                 </>
               )}
             </CardDescription>
           </div>
           <Select
             value={weeklyPeriod}
-            onValueChange={(value) => onPeriodChange(value as WeeklyPeriod | "default")}
+            onValueChange={(value) =>
+              onPeriodChange(value as WeeklyPeriod | "default")
+            }
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Chọn khoảng thời gian" />
@@ -83,45 +93,63 @@ export function WeeklyChart({ weeklyStats, weeklyPeriod, onPeriodChange }: Weekl
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={weeklyChartData} barCategoryGap="20%">
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis 
-                    dataKey="name" 
-                    tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-                    axisLine={{ stroke: 'hsl(var(--border))' }}
-                    tickLine={{ stroke: 'hsl(var(--border))' }}
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="hsl(var(--border))"
                   />
-                  <YAxis 
-                    tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-                    axisLine={{ stroke: 'hsl(var(--border))' }}
-                    tickLine={{ stroke: 'hsl(var(--border))' }}
-                  />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#ffffff',
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '8px',
-                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-                      color: '#111827',
+                  <XAxis
+                    dataKey="name"
+                    tick={{
+                      fill: "hsl(var(--muted-foreground))",
+                      fontSize: 12,
                     }}
-                    labelStyle={{ fontWeight: 600, marginBottom: 4, color: '#111827' }}
-                    itemStyle={{ color: '#111827' }}
-                    cursor={{ fill: 'hsl(var(--muted))', opacity: 0.3 }}
+                    axisLine={{ stroke: "hsl(var(--border))" }}
+                    tickLine={{ stroke: "hsl(var(--border))" }}
                   />
-                  <Legend 
-                    wrapperStyle={{ paddingTop: 16 }}
-                    iconType="circle"
+                  <YAxis
+                    tick={{
+                      fill: "hsl(var(--muted-foreground))",
+                      fontSize: 12,
+                    }}
+                    axisLine={{ stroke: "hsl(var(--border))" }}
+                    tickLine={{ stroke: "hsl(var(--border))" }}
                   />
-                  <Bar 
-                    dataKey="Có mặt" 
-                    fill="#10b981" 
-                    radius={[6, 6, 0, 0]} 
-                    activeBar={{ fill: '#059669', stroke: '#047857', strokeWidth: 1 }}
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#ffffff",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "8px",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                      color: "#111827",
+                    }}
+                    labelStyle={{
+                      fontWeight: 600,
+                      marginBottom: 4,
+                      color: "#111827",
+                    }}
+                    itemStyle={{ color: "#111827" }}
+                    cursor={{ fill: "hsl(var(--muted))", opacity: 0.3 }}
                   />
-                  <Bar 
-                    dataKey="Vắng mặt" 
-                    fill="#f97316" 
-                    radius={[6, 6, 0, 0]} 
-                    activeBar={{ fill: '#ea580c', stroke: '#c2410c', strokeWidth: 1 }}
+                  <Legend wrapperStyle={{ paddingTop: 16 }} iconType="circle" />
+                  <Bar
+                    dataKey="Có mặt"
+                    fill="#10b981"
+                    radius={[6, 6, 0, 0]}
+                    activeBar={{
+                      fill: "#059669",
+                      stroke: "#047857",
+                      strokeWidth: 1,
+                    }}
+                  />
+                  <Bar
+                    dataKey="Vắng mặt"
+                    fill="#f97316"
+                    radius={[6, 6, 0, 0]}
+                    activeBar={{
+                      fill: "#ea580c",
+                      stroke: "#c2410c",
+                      strokeWidth: 1,
+                    }}
                   />
                 </BarChart>
               </ResponsiveContainer>
@@ -129,49 +157,76 @@ export function WeeklyChart({ weeklyStats, weeklyPeriod, onPeriodChange }: Weekl
 
             {/* Line Chart - Attendance Rate */}
             <div className="h-[250px]">
-              <p className="text-sm font-medium mb-2 text-muted-foreground">Tỉ lệ điểm danh (%)</p>
+              <p className="mb-2 font-medium text-muted-foreground text-sm">
+                Tỉ lệ điểm danh (%)
+              </p>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={weeklyChartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis 
-                    dataKey="name" 
-                    tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-                    axisLine={{ stroke: 'hsl(var(--border))' }}
-                    tickLine={{ stroke: 'hsl(var(--border))' }}
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="hsl(var(--border))"
                   />
-                  <YAxis 
-                    domain={[0, 100]}
-                    tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-                    axisLine={{ stroke: 'hsl(var(--border))' }}
-                    tickLine={{ stroke: 'hsl(var(--border))' }}
-                  />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#ffffff',
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '8px',
-                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-                      color: '#111827',
+                  <XAxis
+                    dataKey="name"
+                    tick={{
+                      fill: "hsl(var(--muted-foreground))",
+                      fontSize: 12,
                     }}
-                    labelStyle={{ color: '#111827' }}
-                    itemStyle={{ color: '#111827' }}
-                    formatter={(value: number) => [`${value.toFixed(1)}%`, "Tỉ lệ điểm danh"]}
-                    cursor={{ stroke: 'hsl(var(--muted-foreground))', strokeDasharray: '4 4' }}
+                    axisLine={{ stroke: "hsl(var(--border))" }}
+                    tickLine={{ stroke: "hsl(var(--border))" }}
                   />
-                  <Line 
-                    type="monotone" 
-                    dataKey="Tỉ lệ điểm danh" 
-                    stroke="#6366f1" 
+                  <YAxis
+                    domain={[0, 100]}
+                    tick={{
+                      fill: "hsl(var(--muted-foreground))",
+                      fontSize: 12,
+                    }}
+                    axisLine={{ stroke: "hsl(var(--border))" }}
+                    tickLine={{ stroke: "hsl(var(--border))" }}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#ffffff",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "8px",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                      color: "#111827",
+                    }}
+                    labelStyle={{ color: "#111827" }}
+                    itemStyle={{ color: "#111827" }}
+                    formatter={(value: number) => [
+                      `${value.toFixed(1)}%`,
+                      "Tỉ lệ điểm danh",
+                    ]}
+                    cursor={{
+                      stroke: "hsl(var(--muted-foreground))",
+                      strokeDasharray: "4 4",
+                    }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="Tỉ lệ điểm danh"
+                    stroke="var(--chart-2)"
                     strokeWidth={3}
-                    dot={{ fill: '#6366f1', stroke: '#4f46e5', strokeWidth: 2, r: 5 }}
-                    activeDot={{ fill: '#4f46e5', stroke: '#312e81', strokeWidth: 2, r: 7 }}
+                    dot={{
+                      fill: "var(--chart-1)",
+                      stroke: "var(--chart-2)",
+                      strokeWidth: 2,
+                      r: 5,
+                    }}
+                    activeDot={{
+                      fill: "var(--chart-3)",
+                      stroke: "#312e81",
+                      strokeWidth: 2,
+                      r: 7,
+                    }}
                   />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
         ) : (
-          <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+          <div className="flex justify-center items-center h-[300px] text-muted-foreground">
             Không có dữ liệu thống kê
           </div>
         )}
