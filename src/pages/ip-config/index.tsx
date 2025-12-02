@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Network, Settings, Globe } from "lucide-react";
 
@@ -35,7 +34,6 @@ const IPConfigPage = () => {
     addAllowedIP,
     editAllowedIP,
     removeAllowedIP,
-    toggleAllowedIPStatus,
     isLoadingIPs,
     fetchIPConfig,
     fetchCurrentIP,
@@ -90,9 +88,6 @@ const IPConfigPage = () => {
     setDialogOpen(false);
   };
 
-  const handleToggleStatus = async (ip: AllowedIP) => {
-    await toggleAllowedIPStatus(ip.id);
-  };
 
   const columns: ColumnDef<AllowedIP>[] = [
     createSelectionColumn<AllowedIP>(),
@@ -102,7 +97,9 @@ const IPConfigPage = () => {
       accessorKey: "type",
       header: "Loại",
       cell: ({ row }) => (
-        <Badge variant={row.original.type === "SINGLE" ? "default" : "secondary"}>
+        <Badge
+          variant={row.original.type === "SINGLE" ? "default" : "secondary"}
+        >
           {row.original.type === "SINGLE" ? "IP đơn" : "Dải IP (CIDR)"}
         </Badge>
       ),
@@ -120,15 +117,11 @@ const IPConfigPage = () => {
       accessorKey: "isActive",
       header: "Trạng thái",
       cell: ({ row }) => (
-        <div className="flex items-center gap-2">
-          <Switch
-            checked={row.original.isActive}
-            onCheckedChange={() => handleToggleStatus(row.original)}
-          />
-          <span className={row.original.isActive ? "text-green-600" : "text-gray-400"}>
-            {row.original.isActive ? "Hoạt động" : "Tắt"}
-          </span>
-        </div>
+        <Badge
+          variant={row.original.isActive ? "default" : "destructive"}
+        >
+          {row.original.isActive ? "Hoạt động" : "Không hoạt động"}
+        </Badge>
       ),
     },
     {

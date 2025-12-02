@@ -7,6 +7,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
@@ -21,6 +31,8 @@ export function IPConfigSettingsCard() {
 
   const [errorMessage, setErrorMessage] = useState(config?.errorMessage || "");
   const [isSaving, setIsSaving] = useState(false);
+  const [toggleDialogOpen, setToggleDialogOpen] = useState(false);
+
 
   const handleSaveMessage = async () => {
     setIsSaving(true);
@@ -32,8 +44,17 @@ export function IPConfigSettingsCard() {
   };
 
   const handleToggle = async () => {
-    await toggleIPCheckStatus();
+    if (!config?.enabled) {
+      await toggleIPCheckStatus();
+    } else {
+      setToggleDialogOpen(true);
+    }
   };
+
+  const confirmToggle = async () => {
+    setToggleDialogOpen(false);
+    await toggleIPCheckStatus();
+  }
 
   if (isLoadingConfig && !config) {
     return (
@@ -46,8 +67,7 @@ export function IPConfigSettingsCard() {
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
-      {/* Toggle Card */}
+    <div className="gap-6 grid md:grid-cols-2">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -63,7 +83,7 @@ export function IPConfigSettingsCard() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+          <div className="flex justify-between items-center bg-muted p-4 rounded-lg">
             <div className="space-y-1">
               <p className="font-medium">Trạng thái hiện tại</p>
               <Badge variant={config?.enabled ? "default" : "secondary"}>
@@ -77,16 +97,14 @@ export function IPConfigSettingsCard() {
             />
           </div>
 
-          <div className="text-sm text-muted-foreground">
+          <div className="text-muted-foreground text-sm">
             {config?.enabled ? (
               <p>
-                ✅ Sinh viên chỉ có thể điểm danh khi kết nối từ các địa chỉ IP
+                Sinh viên chỉ có thể điểm danh khi kết nối từ các địa chỉ IP
                 được phép trong danh sách.
               </p>
             ) : (
-              <p>
-                ⚠️ Sinh viên có thể điểm danh từ bất kỳ địa chỉ IP nào.
-              </p>
+              <p>Sinh viên có thể điểm danh từ bất kỳ địa chỉ IP nào.</p>
             )}
           </div>
         </CardContent>
@@ -120,20 +138,35 @@ export function IPConfigSettingsCard() {
               {isSaving ? (
                 <Spinner className="mr-2" />
               ) : (
-                <Save className="w-4 h-4 mr-2" />
+                <Save className="mr-2 w-4 h-4" />
               )}
               Lưu thay đổi
             </Button>
           </div>
 
           {config?.errorMessage && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600 font-medium">Xem trước:</p>
-              <p className="text-sm text-red-800 mt-1">{config.errorMessage}</p>
+            <div className="bg-red-50 p-3 border border-red-200 rounded-lg">
+              <p className="font-medium text-red-600 text-sm">Xem trước:</p>
+              <p className="mt-1 text-red-800 text-sm">{config.errorMessage}</p>
             </div>
           )}
         </CardContent>
-      </Card>
+      </Card> 
+
+      <AlertDialog open={toggleDialogOpen} onOpenChange={setToggleDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xác nhận thay đổi</AlertDialogTitle>
+            <AlertDialogDescription>
+              Bạn có chắc chắn tắt/bật tính năng kiểm tra IP không?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmToggle}>Tắt</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
