@@ -228,11 +228,25 @@ export const createIndexColumn = <T,>(
 ): ColumnDef<T> => ({
   id: "stt",
   header: options?.header || "STT",
-  cell: ({ row }) => (
-    <div className={`text-center ${options?.className || ''}`}>
-      {row.index + 1}
-    </div>
-  ),
+  cell: ({ row, table }) => {
+    const meta = table.options.meta as { pagination?: { currentPage: number; pageSize?: number } } | undefined
+    const pagination = meta?.pagination
+    
+    let index = row.index + 1
+    
+    // Nếu có server-side pagination, tính offset
+    if (pagination && pagination.currentPage) {
+      const pageSize = pagination.pageSize || 20
+      const offset = (pagination.currentPage - 1) * pageSize
+      index = offset + row.index + 1
+    }
+    
+    return (
+      <div className={`text-center ${options?.className || ''}`}>
+        {index}
+      </div>
+    )
+  },
   enableSorting: false,
   enableHiding: false,
   size: options?.size || 60,
