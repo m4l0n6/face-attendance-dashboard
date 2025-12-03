@@ -181,7 +181,7 @@ const StudentsPage = () => {
                 ) : (
                   <Avatar className="w-32 h-32">
                     <AvatarImage
-                      src={selectedStudent.faceImage?.imageUrl || ""}
+                      src=""
                       alt={selectedStudent.name}
                     />
                     <AvatarFallback className="text-2xl">
