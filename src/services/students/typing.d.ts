@@ -4,7 +4,10 @@ export interface Student {
   name: string;
   email: string;
   classId: string;
-  className?: string;
+  class: Class;
+  faceImage?: FaceImage | null;
+  faceDescriptorsCount?: number;
+  hasFaceDescriptor?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -15,4 +18,43 @@ export interface ImportStudentsDto {
     name: string;
     email: string;
   }[];
+}
+
+export interface GetStudentsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  classId?: string;
+}
+
+export interface PaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface GetStudentsResponse {
+  data: Student[];
+  pagination: PaginationMeta;
+}
+
+export interface Class{
+  id: string;
+  name: string;
+  code: string;
+  description: string;
+  lecturer?: {
+    uid: string;
+    displayName: string;
+    email: string;
+  };
+}
+
+export interface FaceImage {
+  id: string;
+  imageUrl: string;
+  publicId?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
