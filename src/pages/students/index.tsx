@@ -27,6 +27,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Load } from "@/components/load";
 import "react-medium-image-zoom/dist/styles.css";
 
 const StudentsPage = () => {
@@ -96,11 +97,8 @@ const StudentsPage = () => {
 
   if (isLoading && students.length === 0) {
     return (
-      <div className="flex justify-center items-center h-[calc(100vh-200px)]">
-        <div className="text-center">
-          <div className="mx-auto border-gray-900 border-b-2 rounded-full w-12 h-12 animate-spin"></div>
-          <p className="mt-4 text-gray-600">Đang tải dữ liệu...</p>
-        </div>
+      <div className="flex justify-center items-center h-64">
+        <Load />
       </div>
     );
   }

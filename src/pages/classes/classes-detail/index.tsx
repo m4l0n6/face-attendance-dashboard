@@ -15,6 +15,7 @@ import { DataTable } from "@/components/common/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { ScheduleForm } from "./components/schedule-form";
+import { ScheduleDetailModal } from "@/components/schedule/ScheduleDetailModal";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -46,6 +47,8 @@ const ClassesDetailPage = () => {
   const [editData, setEditData] = useState<Schedule | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [scheduleDetailOpen, setScheduleDetailOpen] = useState(false);
+  const [selectedScheduleId, setSelectedScheduleId] = useState<string | null>(null);
 
   useEffect(() => {
     if (classes.length === 0) {
@@ -74,8 +77,8 @@ const ClassesDetailPage = () => {
   };
 
   const handleView = (schedule: Schedule) => {
-    console.log("View schedule:", schedule);
-    navigate(`/schedules/${schedule.id}`);
+    setSelectedScheduleId(schedule.id);
+    setScheduleDetailOpen(true);
   };
 
   const handleEdit = (schedule: Schedule) => {
@@ -263,6 +266,12 @@ const ClassesDetailPage = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <ScheduleDetailModal
+        open={scheduleDetailOpen}
+        onOpenChange={setScheduleDetailOpen}
+        scheduleId={selectedScheduleId}
+      />
     </div>
   );
 };
