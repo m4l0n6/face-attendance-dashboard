@@ -19,6 +19,7 @@ interface AttendanceManagementDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   session: ScheduleSession | null;
+  classId: string;
   onEndSession?: () => void;
 }
 
@@ -26,45 +27,40 @@ export function AttendanceManagementDialog({
   open,
   onOpenChange,
   session,
+  classId,
   onEndSession,
 }: AttendanceManagementDialogProps) {
   const { token } = useAuthStore();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const {
-    stats,
-    attendanceList,
-    pagination,
-    isLoadingStats,
-    isLoadingList,
-    fetchStatistics,
-    fetchAttendanceList,
-    updateAttendanceStatus,
-    exportData,
-    reset,
-  } = useAttendanceStore();
+const {
+  stats,
+  attendanceList,
+  pagination,
+  isLoadingStats,
+  isLoadingList,
+  fetchAttendanceList,
+  updateAttendanceStatus,
+  exportData,
+  reset,
+} = useAttendanceStore();
 
-  // Load data when dialog opens
-  useEffect(() => {
-    if (open && session && token) {
-      console.log("🔵 Loading data for session:", session.id);
-      
-      const loadData = async () => {
-        try {
-          await Promise.all([
-            fetchStatistics(token, session.id),
-            fetchAttendanceList(token, session.id, currentPage, 20), // Lấy 20 items
-          ]);
-          console.log("✅ Data loaded successfully");
-        } catch (error) {
-          console.error("❌ Error loading data:", error);
-          toast.error("Không thể tải dữ liệu điểm danh");
-        }
-      };
-      
-      loadData();
-    }
-  }, [open, session, token, currentPage, fetchAttendanceList, fetchStatistics]);
+// Load data when dialog opens
+useEffect(() => {
+  if (open && session && token && classId) {
+    const loadData = async () => {
+      try {
+        // ✅ CHỈ gọi 1 API - stats sẽ tự động tính
+        await fetchAttendanceList(token, session.id, classId, currentPage, 20);
+      } catch (error) {
+        console.error("❌ Error loading data:", error);
+        toast.error("Không thể tải dữ liệu điểm danh");
+      }
+    };
+
+    loadData();
+  }
+}, [open, session, token, classId, currentPage, fetchAttendanceList]);
 
   // Reset when dialog closes
   useEffect(() => {
@@ -107,11 +103,10 @@ export function AttendanceManagementDialog({
   };
 
   const handleRefresh = () => {
-    if (session && token) {
-      fetchStatistics(token, session.id);
-      fetchAttendanceList(token, session.id, currentPage, 20);
-    }
-  };
+  if (session && token && classId) {
+    fetchAttendanceList(token, session.id, classId, currentPage, 20);
+  }
+};
 
   if (!session) return null;
 

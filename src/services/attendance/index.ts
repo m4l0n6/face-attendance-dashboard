@@ -1,78 +1,104 @@
 import axios from "axios";
 import { APP_CONFIG_API_URL } from "@/utils/constant";
 import type {
-  AttendanceStats,
   GetAttendanceListParams,
   GetAttendanceListResponse,
   RecordAttendanceRequest,
   RecordAttendanceResponse,
+  StudentAttendance,
 } from "./typing";
 
-// ✅ Statistics API - Đúng rồi
-export async function getSessionStatistics(
-  token: string,
-  scheduleSessionId: string
-): Promise<AttendanceStats> {
-  console.log("📊 Fetching statistics for session:", scheduleSessionId);
-  return axios
-    .get(`${APP_CONFIG_API_URL}/statistics/session/${scheduleSessionId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .then((response) => {
-      console.log("✅ Statistics response:", response.data);
-      return response.data;
-    })
-    .catch((error) => {
-      console.error("❌ Statistics error:", error);
-      throw error;
-    });
+// ✅ Thêm interfaces cho backend responses
+interface BackendStudent {
+  id: string;
+  studentId: string;
+  name: string;
+  email: string;
+  faceImage?: {
+    id: string;
+    imageUrl: string;
+    faceDescriptor: string;
+  };
 }
 
-// ✅ Attendance List API - SỬA LẠI
+interface BackendAttendanceRecord {
+  id: string;
+  studentId: string;
+  studentName: string;
+  method: string;
+  matchedAt: string;
+  status?: string;
+}
+
+// ❌ XÓA hàm getSessionStatistics - Không cần nữa
+
 export async function getAttendanceList(
   token: string,
   params: GetAttendanceListParams
 ): Promise<GetAttendanceListResponse> {
-  console.log("📋 Fetching attendance list for session:", params.sessionId);
+  const { sessionId, classId, page = 1, limit = 20 } = params;
 
-  // ⚠️ Theo Swagger: GET /attendance/{sessionId}
-  return axios
-    .get(`${APP_CONFIG_API_URL}/attendance/${params.sessionId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      // Không cần params vì sessionId đã ở URL
-    })
-    .then((response) => {
-      console.log("✅ Attendance list response:", response.data);
-
-      // ⚠️ API có thể trả về trực tiếp array hoặc object {data, pagination}
-      // Cần check response structure
-      if (Array.isArray(response.data)) {
-        // Nếu trả về array trực tiếp
-        return {
-          data: response.data,
-          pagination: {
-            page: params.page || 1,
-            limit: params.limit || 20,
-            total: response.data.length,
-            totalPages: 1,
-          },
-        };
+  try {
+    // 1. Lấy danh sách sinh viên trong lớp
+    const studentsResponse = await axios.get<{ data: BackendStudent[] }>(
+      `${APP_CONFIG_API_URL}/students/class/${classId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
+    );
 
-      // Nếu trả về object {data, pagination}
-      return response.data;
-    })
-    .catch((error) => {
-      console.error("❌ Attendance list error:", error.response?.data || error);
-      throw error;
+    // 2. Lấy danh sách attendance records của session
+    const attendanceResponse = await axios.get<BackendAttendanceRecord[]>(
+      `${APP_CONFIG_API_URL}/attendance/${sessionId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const students = studentsResponse.data.data || [];
+    const attendanceRecords = attendanceResponse.data || [];
+
+    // 3. Map student với attendance status
+    const data: StudentAttendance[] = students.map((student) => {
+      const attendanceRecord = attendanceRecords.find(
+        (record) => record.studentId === student.studentId
+      );
+
+      return {
+        id: attendanceRecord?.id || student.id,
+        studentId: student.studentId,
+        name: student.name,
+        status:
+          (attendanceRecord?.status as StudentAttendance["status"]) || "NONE",
+        recordedAt: attendanceRecord?.matchedAt || null,
+        method: attendanceRecord?.method || "MANUAL",
+      };
     });
+
+    // 4. Pagination
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedData = data.slice(startIndex, endIndex);
+
+    return {
+      data: paginatedData,
+      pagination: {
+        page,
+        limit,
+        total: data.length,
+        totalPages: Math.ceil(data.length / limit),
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching attendance list:", error);
+    throw error;
+  }
 }
 
-// ✅ Record Attendance API
 export async function recordAttendance(
   token: string,
   data: RecordAttendanceRequest
@@ -86,7 +112,6 @@ export async function recordAttendance(
     .then((response) => response.data);
 }
 
-// ✅ Export API - Có thể chưa có endpoint này
 export async function exportAttendanceData(
   token: string,
   sessionId: string
@@ -98,9 +123,5 @@ export async function exportAttendanceData(
       },
       responseType: "blob",
     })
-    .then((response) => response.data)
-    .catch((error) => {
-      console.error("❌ Export error:", error);
-      throw new Error("Chức năng xuất dữ liệu chưa được hỗ trợ");
-    });
+    .then((response) => response.data);
 }

@@ -288,15 +288,17 @@ const ClassesDetailPage = () => {
       />
       
       <AttendanceManagementDialog
-        open={attendanceDialogOpen}
-        onOpenChange={setAttendanceDialogOpen}
-        session={selectedSession}
-        onEndSession={() => {
-          if (classId) {
-            fetchSchedules(classId);
-          }
-        }}
-      />
+  open={attendanceDialogOpen}
+  onOpenChange={setAttendanceDialogOpen}
+  session={selectedSession}
+  classId={classId!} // ✅ PASS classId
+  onEndSession={() => {
+    if (classId) {
+      fetchSchedules(classId);
+    }
+  }}
+/>
+
       
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>

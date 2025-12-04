@@ -1,77 +1,35 @@
-import { Button } from "@/components/ui/button";
-import { AttendanceStatus } from "@/services/attendance/typing";
-import { cn } from "@/lib/utils";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { AttendanceStatus } from "@/services/attendance/typing";
 
 interface AttendanceStatusCellProps {
-  currentStatus: AttendanceStatus;
+  status: AttendanceStatus; // ✅ Đổi từ currentStatus thành status
   onStatusChange: (status: AttendanceStatus) => void;
-  disabled?: boolean;
 }
 
-const statusConfig = {
-  [AttendanceStatus.PRESENT]: {
-    label: "Có mặt",
-    color: "text-green-600",
-    bgColor: "bg-green-50 hover:bg-green-100",
-  },
-  [AttendanceStatus.LATE]: {
-    label: "Muộn",
-    color: "text-purple-600",
-    bgColor: "bg-purple-50 hover:bg-purple-100",
-  },
-  [AttendanceStatus.EXCUSED]: {
-    label: "Vắng CP",
-    color: "text-yellow-600",
-    bgColor: "bg-yellow-50 hover:bg-yellow-100",
-  },
-  [AttendanceStatus.UNEXCUSED]: {
-    label: "Vắng KP",
-    color: "text-red-600",
-    bgColor: "bg-red-50 hover:bg-red-100",
-  },
-  [AttendanceStatus.NONE]: {
-    label: "Chưa điểm danh",
-    color: "text-gray-600",
-    bgColor: "bg-gray-50 hover:bg-gray-100",
-  },
-};
-
 export function AttendanceStatusCell({
-  currentStatus,
+  status,
   onStatusChange,
-  disabled = false,
 }: AttendanceStatusCellProps) {
-  const statuses = [
-    AttendanceStatus.PRESENT,
-    AttendanceStatus.LATE,
-    AttendanceStatus.EXCUSED,
-    AttendanceStatus.UNEXCUSED,
-  ];
+  const statusConfig = {
+    PRESENT: { label: "Có mặt", color: "bg-green-100 text-green-800" },
+    LATE: { label: "Muộn/Về sớm", color: "bg-yellow-100 text-yellow-800" },
+    EXCUSED: { label: "Vắng có phép", color: "bg-blue-100 text-blue-800" },
+    UNEXCUSED: { label: "Vắng không phép", color: "bg-red-100 text-red-800" },
+    NONE: { label: "Chưa điểm danh", color: "bg-gray-100 text-gray-800" },
+  };
 
   return (
-    <div className="flex items-center gap-1 flex-wrap">
-      {statuses.map((status) => {
-        const config = statusConfig[status];
-        const isActive = currentStatus === status;
-
-        return (
-          <Button
-            key={status}
-            variant="ghost"
-            size="sm"
-            disabled={disabled}
-            onClick={() => onStatusChange(status)}
-            className={cn(
-              "text-xs px-2 py-1 h-auto",
-              config.color,
-              isActive && config.bgColor,
-              isActive && "font-bold border border-current"
-            )}
-          >
+    <Select value={status} onValueChange={onStatusChange}>
+      <SelectTrigger className={`w-[150px] ${statusConfig[status].color}`}>
+        <SelectValue>{statusConfig[status].label}</SelectValue>
+      </SelectTrigger>
+      <SelectContent>
+        {Object.entries(statusConfig).map(([key, config]) => (
+          <SelectItem key={key} value={key}>
             {config.label}
-          </Button>
-        );
-      })}
-    </div>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }

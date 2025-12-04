@@ -78,28 +78,29 @@ export function AttendanceDataTable({
           <TableBody>
             {data.map((student, index) => (
               <TableRow key={student.id}>
-                <TableCell>{(currentPage - 1) * (pagination?.limit || 10) + index + 1}</TableCell>
-                <TableCell className="font-medium">{student.studentId}</TableCell>
-                <TableCell>{student.name}</TableCell>
-                <TableCell>
-                  <AttendanceStatusCell
-                    currentStatus={student.status}
-                    onStatusChange={(newStatus) =>
-                      onStatusChange(student.studentId, newStatus)
-                    }
-                  />
-                </TableCell>
-                <TableCell>
-                  {student.recordedAt
-                    ? new Date(student.recordedAt).toLocaleString("vi-VN")
-                    : "-"}
-                </TableCell>
-                <TableCell>
-                  <span className="text-xs text-muted-foreground">
-                    {student.method || "MANUAL"}
-                  </span>
-                </TableCell>
-              </TableRow>
+  <TableCell>{(currentPage - 1) * (pagination?.limit || 10) + index + 1}</TableCell>
+  <TableCell className="font-medium">{student.studentId}</TableCell>
+  <TableCell>{student.name}</TableCell> {/* ✅ Đã map từ studentName */}
+  <TableCell>
+    <AttendanceStatusCell
+      status={student.status}
+      onStatusChange={(newStatus) =>
+        onStatusChange(student.studentId, newStatus)
+      }
+    />
+  </TableCell>
+  <TableCell>
+    {student.recordedAt
+      ? new Date(student.recordedAt).toLocaleString("vi-VN")
+      : "-"}
+  </TableCell>
+  <TableCell>
+    <span className="text-xs text-muted-foreground">
+      {student.method || "MANUAL"}
+    </span>
+  </TableCell>
+</TableRow>
+
             ))}
           </TableBody>
         </Table>

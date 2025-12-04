@@ -1,32 +1,32 @@
-export enum AttendanceStatus {
-  PRESENT = "PRESENT", // Có mặt
-  LATE = "LATE", // Muộn/Về sớm
-  EXCUSED = "EXCUSED", // Vắng có phép
-  UNEXCUSED = "UNEXCUSED", // Vắng không phép
-  NONE = "NONE", // Chưa điểm danh
-}
+// ✅ Đổi từ enum sang type union
+export type AttendanceStatus =
+  | "PRESENT"
+  | "LATE"
+  | "EXCUSED"
+  | "UNEXCUSED"
+  | "NONE";
 
 export interface AttendanceStats {
-  total: number; // Tổng sĩ số
-  present: number; // Có mặt
-  late: number; // Muộn/Về sớm
-  excused: number; // Vắng có phép
-  unexcused: number; // Vắng không phép
-  none: number; // Chưa điểm danh
+  total: number;
+  present: number;
+  late: number;
+  excused: number;
+  unexcused: number;
+  none: number;
 }
 
 export interface StudentAttendance {
-  id: string; // Attendance record ID
-  studentId: string; // Mã sinh viên
-  name: string; // Họ tên
-  status: AttendanceStatus; // Trạng thái
-  recordedAt?: string; // Thời gian điểm danh
-  method?: string; // Phương thức (QR, Manual, Face)
-  note?: string; // Ghi chú
+  id: string;
+  studentId: string;
+  name: string;
+  status: AttendanceStatus;
+  method: string;
+  recordedAt: string | null;
 }
 
 export interface GetAttendanceListParams {
   sessionId: string;
+  classId: string; // ✅ THÊM classId
   page?: number;
   limit?: number;
 }
@@ -52,44 +52,4 @@ export interface RecordAttendanceRequest {
 export interface RecordAttendanceResponse {
   message: string;
   attendance: StudentAttendance;
-}
-
-export interface Schedule {
-  id: string;
-  name: string;
-  startDate: string;
-  endDate: string;
-  daysOfWeek: number[];
-  startTime: string;
-  endTime: string;
-  room: string;
-  description: string;
-  classId: string;
-  sessions?: ScheduleSession[]; // Thêm dòng này
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface ScheduleWithSessions {
-  schedule: Schedule & {
-    class?: {
-      id: string;
-      name: string;
-      code: string;
-    };
-  };
-  sessions: ScheduleSession[];
-}
-
-export interface ScheduleSession {
-  id: string;
-  sessionName: string;
-  sessionDate: string;
-  status: "SCHEDULED" | "COMPLETED" | "CANCELLED";
-  note?: string;
-  sessions: Array<{
-    id: string;
-    startAt: string;
-    endAt: string;
-  }>;
 }
