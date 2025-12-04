@@ -1,6 +1,6 @@
 import axios from "axios";
 import { APP_CONFIG_API_URL } from "@/utils/constant";
-import type { StartSessionRequest } from "./typing";
+import type { StartSessionRequest, ScheduleWithSessions } from "./typing";
 
 export async function startSession(token: string, data: StartSessionRequest) {
   return axios
@@ -40,10 +40,22 @@ export async function updateScheduleSession(
     .then((response) => response.data);
 }
 
+// ✅ Trả về CHỈ array sessions
+export async function getSessionsBySchedule(token: string, scheduleId: string) {
+  return axios
+    .get(`${APP_CONFIG_API_URL}/schedules/${scheduleId}/sessions`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((response) => response.data.sessions); // ⚠️ CHÚ Ý: .sessions
+}
+
+// ✅ Trả về CẢ object {schedule, sessions}
 export async function getScheduleWithSessions(
   token: string,
   scheduleId: string
-) {
+): Promise<ScheduleWithSessions> {
   return axios
     .get(`${APP_CONFIG_API_URL}/schedules/${scheduleId}/sessions`, {
       headers: {
