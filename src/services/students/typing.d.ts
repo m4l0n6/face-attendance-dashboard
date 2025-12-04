@@ -1,3 +1,4 @@
+import { PostFaceImages } from './typing.d';
 export interface Student {
   id: string;
   studentId: string;
@@ -57,4 +58,25 @@ export interface FaceImage {
   publicId?: string;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface PostFaceImages{
+  studentId: string;
+  image: File;
+}
+
+export interface PutFaceImages{
+  image: File;
+}
+
+export interface PostFaceImagesResponse {
+  data: {
+    id: string;
+    studentId: string;
+    imageUrl: string; 
+    publicId: string;
+    createdAt: string;
+    updatedAt: string;
+    student: Student;
+  }
 }

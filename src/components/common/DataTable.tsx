@@ -57,6 +57,7 @@ interface DataTableProps<TData, TValue> {
   onRefresh?: () => void
   showRefreshButton?: boolean
   pagination?: ServerPagination
+  filterComponents?: React.ReactNode[]
 }
 
 export function DataTable<TData, TValue>({
@@ -75,6 +76,7 @@ export function DataTable<TData, TValue>({
   onRefresh,
   showRefreshButton = true,
   pagination,
+  filterComponents,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -148,7 +150,15 @@ export function DataTable<TData, TValue>({
           )}
         </div>
         
-        {showColumnToggle && (
+        <div className="flex items-center space-x-2">
+          {/* Filter Components */}
+          {filterComponents && filterComponents.map((component, index) => (
+            <div key={index}>
+              {component}
+            </div>
+          ))}
+        
+          {showColumnToggle && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -179,10 +189,11 @@ export function DataTable<TData, TValue>({
                       {column.id}
                     </DropdownMenuCheckboxItem>
                   )
-                })}
+              })}
             </DropdownMenuContent>
           </DropdownMenu>
-        )}
+      )}
+        </div>
       </div>
 
       {/* Table */}

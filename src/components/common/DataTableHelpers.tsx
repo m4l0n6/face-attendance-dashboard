@@ -3,6 +3,13 @@ import { Button } from "@/components/ui/button"
 import { ButtonGroup } from "@/components/ui/button-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { ArrowUpDown, Edit, Trash2, ExternalLink } from "lucide-react"
 
 // Types for common column configurations
@@ -251,3 +258,39 @@ export const createIndexColumn = <T,>(
   enableHiding: false,
   size: options?.size || 60,
 })
+
+// Filter Select Helper Component
+export interface FilterSelectOption {
+  label: string
+  value: string
+}
+
+export const createFilterSelect = (
+  options: FilterSelectOption[],
+  config: {
+    value: string | null
+    onValueChange: (value: string | null) => void
+    placeholder?: string
+    allLabel?: string
+    className?: string
+  }
+) => {
+  return (
+    <Select
+      value={config.value || "all"}
+      onValueChange={(value) => config.onValueChange(value === "all" ? null : value)}
+    >
+      <SelectTrigger className={config.className || "w-[200px]"}>
+        <SelectValue placeholder={config.placeholder || "Tất cả"} />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="all">{config.allLabel || "Tất cả"}</SelectItem>
+        {options.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  )
+}
