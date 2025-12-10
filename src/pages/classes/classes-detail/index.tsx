@@ -81,10 +81,10 @@ const ClassesDetailPage = () => {
     setScheduleDetailOpen(true);
   };
 
-  const handleEdit = (schedule: Schedule) => {
-    setEditData(schedule);
-    setDialogOpen(true);
-  };
+  // const handleEdit = (schedule: Schedule) => {
+  //   setEditData(schedule);
+  //   setDialogOpen(true);
+  // };
 
   const handleCreateSchedule = async (data: {
     name: string;
@@ -167,7 +167,7 @@ const ClassesDetailPage = () => {
     },
     createActionsColumn({
       onView: handleView,
-      onEdit: handleEdit,
+      // onEdit: handleEdit,
       onDelete: handleDeleteClick,
     }),
   ];

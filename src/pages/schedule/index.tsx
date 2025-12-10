@@ -42,7 +42,7 @@ const SchedulesDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     if (!scheduleId || !token) return;
@@ -61,7 +61,6 @@ const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scheduleId, token]);
 
   const handleStartSession = async (session: ScheduleSession) => {
